@@ -30,9 +30,11 @@ if uploaded_file:
 
     llm = Ollama(model="qwen3:4b")
 
-    query = st.text_input("请输入问题")
+    query = st.chat_input("请输入你的问题")
 
     if query:
+        with st.chat_message("user"):
+             st.markdown(query)
         related_docs = vectorstore.similarity_search(query, k=4)
         context = "\n".join([doc.page_content for doc in related_docs])
 
@@ -67,5 +69,6 @@ if uploaded_file:
     if st.session_state.history:
         st.subheader("历史对话")
         for h in st.session_state.history:
-            st.write("用户：", h["user"])
-            st.write("AI：", h["ai"])
+            with st.chat_message("assistant"):
+                 st.markdown(response)
+          
